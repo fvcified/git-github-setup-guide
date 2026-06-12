@@ -1,5 +1,3 @@
-Karena kamu minta versi yang bisa langsung dicopy dan diedit, sebaiknya saya berikan sebagai dokumen terpisah.
-
 # Git & GitHub Setup Guide
 
 ---
