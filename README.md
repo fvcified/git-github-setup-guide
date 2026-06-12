@@ -1,352 +1,741 @@
+Karena kamu minta versi yang bisa langsung dicopy dan diedit, sebaiknya saya berikan sebagai dokumen terpisah.
+
 # Git & GitHub Setup Guide
+
 ---
-<br>
 
 ## 1️⃣ Create a repository on GitHub
-- Go to **GitHub → New repository**
-- Enter the repository name **same as your folder** (e.g., `my_repository`)
-- **Do NOT** check README / .gitignore / License
-- Copy the **repository URL**  
-  Example: `https://github.com/<github_username>/<repository_name>.git`
+
+* Go to **GitHub → New repository**
+* Enter the repository name **same as your folder** (e.g., `my_repository`)
+* **Do NOT** check README / .gitignore / License
+* Copy the repository URL
+
+Example:
+
+```bash
+https://github.com/<github_username>/<repository_name>.git
+```
+
+---
 
 ## 2️⃣ Prepare your local folder
+
 ```bash
 cd /path/to/your/folder
-git init                  # Initialize git
-git add .                 # Add all files
+
+git init
+git add .
 git commit -m "Initial commit"
 ```
-⚠️ If the folder is empty → create a .gitkeep file
+
+If the folder is empty:
+
 ```bash
-touch <folder_name>/.gitkeep
+touch .gitkeep
 git add .
-git commit -m "Upd!"
+git commit -m "Initial commit"
 ```
 
+---
+
 ## 3️⃣ Connect to GitHub remote
+
 ```bash
 git remote add origin https://github.com/<github_username>/<repository_name>.git
 ```
-Check connection:
+
+Verify:
+
 ```bash
 git remote -v
 ```
 
-## 4️⃣ Rename local branch to main (GitHub default)
+Show detailed remote information:
+
+```bash
+git remote show origin
+```
+
+---
+
+## 4️⃣ Rename local branch to main
+
 ```bash
 git branch -M main
 ```
 
+---
+
 ## 5️⃣ Set upstream branch
+
 ```bash
 git push -u origin main
 ```
+
+After first push:
+
 ```bash
 git push
 ```
 
-## 6️⃣ Embed credentials into remote URL (for auto-auth)
+---
+
+## 6️⃣ Authentication (Recommended)
+
+Windows:
+
 ```bash
-git clone https://github.com/<github_username>/<repository_name>.git
+git config --global credential.helper manager
 ```
-Open `.git/config` and update the remote URL:
-<br>
+
+GitHub CLI:
 
 ```bash
-url = https://<github_username>:<personal_access_token>@github.com/<github_username>/<repository_name>.git
+gh auth login
 ```
 
-<br>
+Verify login:
 
-## 7️⃣ Handle rejected push (remote has new commits)
-If you see `rejected - fetch first` or `non-fast-forward`:
 ```bash
-# Pull remote changes and rebase on top of local commits
+gh auth status
+```
+
+---
+
+## 7️⃣ Clone an existing repository
+
+```bash
+git clone https://github.com/<user>/<repo>.git
+
+cd <repo>
+```
+
+Clone a specific branch:
+
+```bash
+git clone -b <branch_name> https://github.com/<user>/<repo>.git
+```
+
+---
+
+## 8️⃣ Handle rejected push
+
+If you see:
+
+```text
+rejected - fetch first
+non-fast-forward
+```
+
+Run:
+
+```bash
 git pull origin main --rebase
 ```
-Then push:
+
+Then:
+
 ```bash
 git push origin main
 ```
 
-## 8️⃣ Handle merge conflicts during rebase
-If rebase stops with a conflict (e.g., in `README.md`):
+---
+
+## 9️⃣ Handle merge conflicts during rebase
+
+Keep your version:
+
 ```bash
-# Keep your local version of the conflicted file
-git checkout --ours <conflicted_file>
-# Mark as resolved
-git add <conflicted_file>
-# Continue the rebase
+git checkout --ours <file>
+git add <file>
 git rebase --continue
 ```
-If editor opens for commit message:
-- **Vim** → type `:wq` then Enter
-- **Nano** → press `Ctrl+X`
 
-To abort the rebase entirely and go back to before:
+Keep remote version:
+
+```bash
+git checkout --theirs <file>
+git add <file>
+git rebase --continue
+```
+
+Abort rebase:
+
 ```bash
 git rebase --abort
 ```
 
-## 9️⃣ Force push (last resort)
-If history is completely out of sync and you want to overwrite remote with local:
+Editor shortcuts:
+
+Vim:
+
+```text
+:wq
+```
+
+Nano:
+
+```text
+Ctrl+X
+```
+
+---
+
+## 🔟 Force push (last resort)
+
+Safer:
+
+```bash
+git push origin main --force-with-lease
+```
+
+Dangerous:
+
 ```bash
 git push origin main --force
 ```
-⚠️ This overwrites everything on remote. Only use if you are the sole contributor or the repo is new.
 
-## 🔟 Everyday workflow (after initial setup)
+Only use when necessary.
+
+---
+
+## 1️⃣1️⃣ Everyday workflow
+
 ```bash
 git add .
-git commit -m "your commit message"
+git commit -m "your message"
 git push
 ```
 
-##
-If you ever see the message:
-**`fatal: The upstream branch of your current branch does not match`**
+---
 
-Run this to link the local branch to the correct remote:
+## 1️⃣2️⃣ Upstream branch mismatch
+
+If you see:
+
+```text
+fatal: The upstream branch of your current branch does not match
+```
+
+Run:
+
 ```bash
 git branch --set-upstream-to=origin/main main
 ```
 
-## 1️⃣1️⃣ Handle merge conflicts (non-rebase)
-If `git pull` results in a conflict:
+---
+
+## 1️⃣3️⃣ Fetch without merge
+
+Fetch latest changes:
+
 ```bash
-# See which files are conflicted
+git fetch origin
+```
+
+Fetch all remotes:
+
+```bash
+git fetch --all
+```
+
+Difference:
+
+```bash
+git fetch
+```
+
+Downloads changes only.
+
+```bash
+git pull
+```
+
+Downloads + merges/rebases.
+
+---
+
+## 1️⃣4️⃣ Update branch with latest main
+
+Using rebase:
+
+```bash
+git checkout <branch_name>
+
+git fetch origin
+
+git rebase origin/main
+```
+
+Using merge:
+
+```bash
+git checkout <branch_name>
+
+git fetch origin
+
+git merge origin/main
+```
+
+---
+
+## 1️⃣5️⃣ Pull Request workflow
+
+```bash
+git checkout -b feature-name
+
+git add .
+
+git commit -m "feat: description"
+
+git push -u origin feature-name
+```
+
+Then:
+
+1. Open GitHub
+2. Click **Compare & Pull Request**
+3. Create Pull Request
+4. Wait for review
+
+---
+
+## 1️⃣6️⃣ Amend commit
+
+Change last commit message:
+
+```bash
+git commit --amend -m "new message"
+```
+
+Add forgotten files:
+
+```bash
+git add .
+
+git commit --amend --no-edit
+```
+
+---
+
+## 1️⃣7️⃣ Handle merge conflicts (non-rebase)
+
+Check conflicts:
+
+```bash
 git status
+```
 
-# Option A — keep your local version
-git checkout --ours <conflicted_file>
+Keep local version:
 
-# Option B — keep remote version
-git checkout --theirs <conflicted_file>
+```bash
+git checkout --ours <file>
+```
 
-# Mark as resolved
-git add <conflicted_file>
+Keep remote version:
+
+```bash
+git checkout --theirs <file>
+```
+
+Resolve:
+
+```bash
+git add <file>
+
 git commit -m "resolve merge conflict"
+
 git push
 ```
 
-## 1️⃣2️⃣ Undo last commit (keep changes)
+---
+
+## 1️⃣8️⃣ Undo last commit (keep changes)
+
 ```bash
 git reset --soft HEAD~1
 ```
 
-## 1️⃣3️⃣ Undo last commit (discard changes)
+---
+
+## 1️⃣9️⃣ Undo last commit (discard changes)
+
 ```bash
 git reset --hard HEAD~1
 ```
-⚠️ This permanently discards uncommitted changes.
 
-## 1️⃣4️⃣ Check commit history
+---
+
+## 2️⃣0️⃣ Restore & unstage
+
+Discard file changes:
+
 ```bash
-# Simple one-line log
+git restore <file>
+```
+
+Discard all unstaged changes:
+
+```bash
+git restore .
+```
+
+Unstage file:
+
+```bash
+git restore --staged <file>
+```
+
+Legacy:
+
+```bash
+git reset HEAD <file>
+```
+
+---
+
+## 2️⃣1️⃣ Check commit history
+
+```bash
 git log --oneline
+```
 
-# Detailed log with graph
+```bash
 git log --oneline --graph --all
+```
 
-# Log with author and date
+```bash
 git log --pretty=format:"%h %an %ad %s" --date=short
 ```
 
-## 1️⃣5️⃣ Stash changes temporarily
+---
+
+## 2️⃣2️⃣ Stash changes
+
 ```bash
-# Save current changes without committing
 git stash
+```
 
-# List all stashes
+```bash
 git stash list
+```
 
-# Restore latest stash
+```bash
 git stash pop
+```
 
-# Restore specific stash
+```bash
 git stash apply stash@{0}
+```
 
-# Drop a stash
+```bash
 git stash drop stash@{0}
+```
 
-# Clear all stashes
+```bash
 git stash clear
 ```
 
-## 1️⃣6️⃣ Branching
+---
+
+## 2️⃣3️⃣ Branching
+
+Create:
+
 ```bash
-# Create a new branch
 git branch <branch_name>
+```
 
-# Switch to a branch
+Switch:
+
+```bash
 git checkout <branch_name>
+```
 
-# Create and switch in one command
+Modern:
+
+```bash
+git switch <branch_name>
+```
+
+Create and switch:
+
+```bash
 git checkout -b <branch_name>
+```
 
-# List all branches
+Modern:
+
+```bash
+git switch -c <branch_name>
+```
+
+List:
+
+```bash
 git branch -a
+```
 
-# Delete a branch (local)
+Delete local:
+
+```bash
 git branch -d <branch_name>
+```
 
-# Delete a branch (remote)
+Force delete:
+
+```bash
+git branch -D <branch_name>
+```
+
+Delete remote:
+
+```bash
 git push origin --delete <branch_name>
+```
 
-# Rename current branch
+Rename:
+
+```bash
 git branch -m <new_name>
 ```
 
-## 1️⃣7️⃣ Merging branches
+---
+
+## 2️⃣4️⃣ Merging branches
+
 ```bash
-# Switch to target branch first
 git checkout main
+```
 
-# Merge another branch into current
+```bash
 git merge <branch_name>
+```
 
-# Merge with a commit message (no fast-forward)
+```bash
 git merge --no-ff <branch_name> -m "merge: <branch_name> into main"
+```
 
-# Abort a merge in progress
+Abort:
+
+```bash
 git merge --abort
 ```
 
-## 1️⃣8️⃣ Tagging
+---
+
+## 2️⃣5️⃣ Tagging
+
 ```bash
-# Create a lightweight tag
 git tag v1.0.0
+```
 
-# Create an annotated tag
+```bash
 git tag -a v1.0.0 -m "Release version 1.0.0"
+```
 
-# List all tags
+```bash
 git tag
+```
 
-# Push a tag to remote
+```bash
 git push origin v1.0.0
+```
 
-# Push all tags to remote
+```bash
 git push origin --tags
+```
 
-# Delete a tag (local)
+```bash
 git tag -d v1.0.0
+```
 
-# Delete a tag (remote)
+```bash
 git push origin --delete tag v1.0.0
 ```
 
-## 1️⃣9️⃣ Diff & Inspect
+---
+
+## 2️⃣6️⃣ Diff & inspect
+
 ```bash
-# Show unstaged changes
 git diff
+```
 
-# Show staged changes
+```bash
 git diff --staged
+```
 
-# Compare two branches
+```bash
 git diff main..<branch_name>
+```
 
-# Show changes in a specific commit
+```bash
 git show <commit_hash>
+```
 
-# Show who changed what in a file
+```bash
 git blame <file>
 ```
 
-## 2️⃣0️⃣ Cherry-pick (apply a specific commit)
+---
+
+## 2️⃣7️⃣ Cherry-pick
+
 ```bash
-# Apply a specific commit from another branch
 git cherry-pick <commit_hash>
+```
 
-# Cherry-pick without auto-committing
+```bash
 git cherry-pick <commit_hash> --no-commit
+```
 
-# Abort cherry-pick
+Abort:
+
+```bash
 git cherry-pick --abort
 ```
 
-## 2️⃣1️⃣ Revert a commit (safe undo)
-```bash
-# Create a new commit that undoes a specific commit
-git revert <commit_hash>
+---
 
-# Revert without auto-committing
+## 2️⃣8️⃣ Revert
+
+```bash
+git revert <commit_hash>
+```
+
+```bash
 git revert <commit_hash> --no-commit
 ```
-Unlike `reset`, `revert` is safe for shared/remote branches because it does not rewrite history.
 
-## 2️⃣2️⃣ Clean untracked files
+---
+
+## 2️⃣9️⃣ Clean untracked files
+
+Preview:
+
 ```bash
-# Preview what will be deleted
 git clean -n
+```
 
-# Delete untracked files
+Delete files:
+
+```bash
 git clean -f
+```
 
-# Delete untracked files and directories
+Delete files + folders:
+
+```bash
 git clean -fd
+```
 
-# Delete untracked + ignored files
+Delete everything:
+
+```bash
 git clean -fdx
 ```
 
-## 2️⃣3️⃣ Submodules
+---
+
+## 3️⃣0️⃣ Submodules
+
 ```bash
-# Add a submodule
 git submodule add https://github.com/<user>/<repo>.git <path>
+```
 
-# Clone a repo with submodules
+```bash
 git clone --recurse-submodules https://github.com/<user>/<repo>.git
+```
 
-# Update all submodules
+```bash
 git submodule update --remote
+```
 
-# Remove a submodule
+Remove:
+
+```bash
 git submodule deinit <path>
+
 git rm <path>
 ```
 
-## 2️⃣4️⃣ Aliases (shortcuts)
+---
+
+## 3️⃣1️⃣ Aliases
+
 ```bash
-# Set up useful aliases
 git config --global alias.st status
 git config --global alias.co checkout
 git config --global alias.br branch
 git config --global alias.lg "log --oneline --graph --all"
+```
 
-# Usage
+Usage:
+
+```bash
 git st
 git co main
 git br
 git lg
 ```
 
-## 2️⃣5️⃣ Global config setup
+---
+
+## 3️⃣2️⃣ Global config
+
 ```bash
-# Set your identity
 git config --global user.name "Your Name"
+```
+
+```bash
 git config --global user.email "you@example.com"
+```
 
-# Set default editor
-git config --global core.editor "code --wait"   # VSCode
-git config --global core.editor "vim"            # Vim
-git config --global core.editor "nano"           # Nano
+VSCode:
 
-# Set default branch name
+```bash
+git config --global core.editor "code --wait"
+```
+
+Vim:
+
+```bash
+git config --global core.editor "vim"
+```
+
+Nano:
+
+```bash
+git config --global core.editor "nano"
+```
+
+Default branch:
+
+```bash
 git config --global init.defaultBranch main
+```
 
-# View all config
+View config:
+
+```bash
 git config --list
 ```
 
-## 2️⃣6️⃣ .gitignore
+---
+
+## 3️⃣3️⃣ .gitignore
+
+Create:
+
 ```bash
-# Create a .gitignore file
 touch .gitignore
 ```
+
 Common entries:
-```
+
+```gitignore
 node_modules/
 .env
 .env.local
@@ -357,66 +746,87 @@ build/
 .next/
 .vercel/
 ```
-Force untrack a file already committed:
+
+Stop tracking a file:
+
 ```bash
 git rm --cached <file>
+
 git add .
-git commit -m "remove <file> from tracking"
+
+git commit -m "remove file from tracking"
 ```
 
-## 2️⃣7️⃣ Fix detached HEAD state
-```bash
-# You are in detached HEAD — save your work first
-git checkout -b <new_branch_name>
+---
 
-# Then merge back to main if needed
+## 3️⃣4️⃣ Fix detached HEAD
+
+```bash
+git checkout -b <new_branch_name>
+```
+
+Then:
+
+```bash
 git checkout main
+
 git merge <new_branch_name>
 ```
 
-## 2️⃣8️⃣ Recover deleted branch
-```bash
-# Find the commit hash of the deleted branch
-git reflog
+---
 
-# Recreate the branch from that commit
+## 3️⃣5️⃣ Recover deleted branch
+
+```bash
+git reflog
+```
+
+```bash
 git checkout -b <branch_name> <commit_hash>
 ```
 
-## 2️⃣9️⃣ Interactive rebase (rewrite history)
+---
+
+## 3️⃣6️⃣ Interactive rebase
+
 ```bash
-# Rebase last N commits interactively
 git rebase -i HEAD~<N>
 ```
-In the editor, you can:
-- `pick` — keep the commit as is
-- `reword` — edit the commit message
-- `squash` — combine with previous commit
-- `drop` — delete the commit
 
-⚠️ Never interactive rebase commits that have already been pushed to a shared branch.
+Commands:
 
-## 3️⃣0️⃣ Squash commits before pushing
+* pick
+* reword
+* squash
+* drop
+
+Never rewrite shared branch history.
+
+---
+
+## 3️⃣7️⃣ Squash commits
+
 ```bash
-# Squash last 3 commits into one
 git reset --soft HEAD~3
-git commit -m "your combined commit message"
-git push origin main --force
+
+git commit -m "combined commit"
+
+git push origin main --force-with-lease
 ```
 
-##
-<br>
+---
 
 ## ⚠️ Notes
-- The old `master` branch usually does not exist → no need to delete
-- On Windows, you might see `credential-manager-core` warning → safe to ignore
-- Git ignores empty folders → add `.gitkeep` to track the folder
-- `--allow-unrelated-histories` flag is needed when local and remote have separate init commits
-- `--ours` keeps your local file during conflict; `--theirs` keeps the remote version
-- Never force push to a shared/production branch
-- `git reset --soft` keeps your changes staged; `--hard` wipes them completely
-- `git stash` is useful when you need to switch branches without committing
-- `git revert` is safer than `git reset` on shared branches — it does not rewrite history
-- Always `git pull` before starting new work to avoid conflicts
-- Use `.gitignore` early — removing tracked files later requires `git rm --cached`
-- `git reflog` is your safety net — almost nothing is truly lost in Git
+
+* Git ignores empty folders → use `.gitkeep`
+* `git fetch` does not merge
+* `git pull` = fetch + merge/rebase
+* `git revert` is safer than `git reset`
+* `git reflog` can recover most mistakes
+* Prefer `--force-with-lease` over `--force`
+* Use `.gitignore` early
+* Never force push to shared production branches
+* Always pull or fetch before major work
+* `--ours` keeps local changes
+* `--theirs` keeps incoming changes
+* Detached HEAD is not dangerous if you create a branch before leaving it
