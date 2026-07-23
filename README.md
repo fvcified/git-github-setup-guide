@@ -1,13 +1,9 @@
 # Git & GitHub Setup Guide
-
----
-
 ## 1️⃣ Create a repository on GitHub
-
-* Go to **GitHub → New repository**
-* Enter the repository name **same as your folder** (e.g., `my_repository`)
-* **Do NOT** check README / .gitignore / License
-* Copy the repository URL
+- Go to **GitHub → New repository**
+- Enter the repository name **same as your folder** (e.g., `my_repository`)
+- **Do NOT** check README / .gitignore / License
+- Copy the repository URL
 
 Example:
 
@@ -15,10 +11,7 @@ Example:
 https://github.com/<github_username>/<repository_name>.git
 ```
 
----
-
 ## 2️⃣ Prepare your local folder
-
 ```bash
 cd /path/to/your/folder
 
@@ -35,10 +28,7 @@ git add .
 git commit -m "Initial commit"
 ```
 
----
-
 ## 3️⃣ Connect to GitHub remote
-
 ```bash
 git remote add origin https://github.com/<github_username>/<repository_name>.git
 ```
@@ -55,18 +45,12 @@ Show detailed remote information:
 git remote show origin
 ```
 
----
-
 ## 4️⃣ Rename local branch to main
-
 ```bash
 git branch -M main
 ```
 
----
-
 ## 5️⃣ Set upstream branch
-
 ```bash
 git push -u origin main
 ```
@@ -77,10 +61,7 @@ After first push:
 git push
 ```
 
----
-
 ## 6️⃣ Authentication (Recommended)
-
 Windows:
 
 ```bash
@@ -99,10 +80,7 @@ Verify login:
 gh auth status
 ```
 
----
-
 ## 7️⃣ Clone an existing repository
-
 ```bash
 git clone https://github.com/<user>/<repo>.git
 
@@ -115,10 +93,7 @@ Clone a specific branch:
 git clone -b <branch_name> https://github.com/<user>/<repo>.git
 ```
 
----
-
 ## 8️⃣ Handle rejected push
-
 If you see:
 
 ```text
@@ -138,10 +113,7 @@ Then:
 git push origin main
 ```
 
----
-
 ## 9️⃣ Handle merge conflicts during rebase
-
 Keep your version:
 
 ```bash
@@ -178,10 +150,7 @@ Nano:
 Ctrl+X
 ```
 
----
-
 ## 🔟 Force push (last resort)
-
 Safer:
 
 ```bash
@@ -196,20 +165,14 @@ git push origin main --force
 
 Only use when necessary.
 
----
-
 ## 1️⃣1️⃣ Everyday workflow
-
 ```bash
 git add .
 git commit -m "your message"
 git push
 ```
 
----
-
 ## 1️⃣2️⃣ Upstream branch mismatch
-
 If you see:
 
 ```text
@@ -222,10 +185,7 @@ Run:
 git branch --set-upstream-to=origin/main main
 ```
 
----
-
 ## 1️⃣3️⃣ Fetch without merge
-
 Fetch latest changes:
 
 ```bash
@@ -252,10 +212,7 @@ git pull
 
 Downloads + merges/rebases.
 
----
-
 ## 1️⃣4️⃣ Update branch with latest main
-
 Using rebase:
 
 ```bash
@@ -276,10 +233,7 @@ git fetch origin
 git merge origin/main
 ```
 
----
-
 ## 1️⃣5️⃣ Pull Request workflow
-
 ```bash
 git checkout -b feature-name
 
@@ -297,10 +251,7 @@ Then:
 3. Create Pull Request
 4. Wait for review
 
----
-
 ## 1️⃣6️⃣ Amend commit
-
 Change last commit message:
 
 ```bash
@@ -315,10 +266,7 @@ git add .
 git commit --amend --no-edit
 ```
 
----
-
 ## 1️⃣7️⃣ Handle merge conflicts (non-rebase)
-
 Check conflicts:
 
 ```bash
@@ -347,26 +295,17 @@ git commit -m "resolve merge conflict"
 git push
 ```
 
----
-
 ## 1️⃣8️⃣ Undo last commit (keep changes)
-
 ```bash
 git reset --soft HEAD~1
 ```
 
----
-
 ## 1️⃣9️⃣ Undo last commit (discard changes)
-
 ```bash
 git reset --hard HEAD~1
 ```
 
----
-
 ## 2️⃣0️⃣ Restore & unstage
-
 Discard file changes:
 
 ```bash
@@ -391,10 +330,7 @@ Legacy:
 git reset HEAD <file>
 ```
 
----
-
 ## 2️⃣1️⃣ Check commit history
-
 ```bash
 git log --oneline
 ```
@@ -407,10 +343,7 @@ git log --oneline --graph --all
 git log --pretty=format:"%h %an %ad %s" --date=short
 ```
 
----
-
 ## 2️⃣2️⃣ Stash changes
-
 ```bash
 git stash
 ```
@@ -435,10 +368,7 @@ git stash drop stash@{0}
 git stash clear
 ```
 
----
-
 ## 2️⃣3️⃣ Branching
-
 Create:
 
 ```bash
@@ -499,10 +429,7 @@ Rename:
 git branch -m <new_name>
 ```
 
----
-
 ## 2️⃣4️⃣ Merging branches
-
 ```bash
 git checkout main
 ```
@@ -521,10 +448,7 @@ Abort:
 git merge --abort
 ```
 
----
-
 ## 2️⃣5️⃣ Tagging
-
 ```bash
 git tag v1.0.0
 ```
@@ -553,10 +477,7 @@ git tag -d v1.0.0
 git push origin --delete tag v1.0.0
 ```
 
----
-
 ## 2️⃣6️⃣ Diff & inspect
-
 ```bash
 git diff
 ```
@@ -577,10 +498,7 @@ git show <commit_hash>
 git blame <file>
 ```
 
----
-
 ## 2️⃣7️⃣ Cherry-pick
-
 ```bash
 git cherry-pick <commit_hash>
 ```
@@ -595,10 +513,7 @@ Abort:
 git cherry-pick --abort
 ```
 
----
-
 ## 2️⃣8️⃣ Revert
-
 ```bash
 git revert <commit_hash>
 ```
@@ -607,10 +522,7 @@ git revert <commit_hash>
 git revert <commit_hash> --no-commit
 ```
 
----
-
 ## 2️⃣9️⃣ Clean untracked files
-
 Preview:
 
 ```bash
@@ -635,10 +547,7 @@ Delete everything:
 git clean -fdx
 ```
 
----
-
 ## 3️⃣0️⃣ Submodules
-
 ```bash
 git submodule add https://github.com/<user>/<repo>.git <path>
 ```
@@ -659,10 +568,7 @@ git submodule deinit <path>
 git rm <path>
 ```
 
----
-
 ## 3️⃣1️⃣ Aliases
-
 ```bash
 git config --global alias.st status
 git config --global alias.co checkout
@@ -679,10 +585,7 @@ git br
 git lg
 ```
 
----
-
 ## 3️⃣2️⃣ Global config
-
 ```bash
 git config --global user.name "Your Name"
 ```
@@ -721,10 +624,7 @@ View config:
 git config --list
 ```
 
----
-
 ## 3️⃣3️⃣ .gitignore
-
 Create:
 
 ```bash
@@ -755,10 +655,7 @@ git add .
 git commit -m "remove file from tracking"
 ```
 
----
-
 ## 3️⃣4️⃣ Fix detached HEAD
-
 ```bash
 git checkout -b <new_branch_name>
 ```
@@ -771,10 +668,7 @@ git checkout main
 git merge <new_branch_name>
 ```
 
----
-
 ## 3️⃣5️⃣ Recover deleted branch
-
 ```bash
 git reflog
 ```
@@ -783,10 +677,7 @@ git reflog
 git checkout -b <branch_name> <commit_hash>
 ```
 
----
-
 ## 3️⃣6️⃣ Interactive rebase
-
 ```bash
 git rebase -i HEAD~<N>
 ```
@@ -800,10 +691,7 @@ Commands:
 
 Never rewrite shared branch history.
 
----
-
 ## 3️⃣7️⃣ Squash commits
-
 ```bash
 git reset --soft HEAD~3
 
@@ -811,8 +699,6 @@ git commit -m "combined commit"
 
 git push origin main --force-with-lease
 ```
-
----
 
 ## ⚠️ Notes
 
